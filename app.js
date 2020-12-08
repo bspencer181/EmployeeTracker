@@ -162,3 +162,71 @@ function addEmployee(){
         )
     })
 }
+//Role selection
+var roleArray = [];
+function selectRole(){
+    connection.query("SELECT * FROM role", function(err,res){
+        if (err) throw err
+        for (var i = 0; i < res.length; i++){
+            roleArray.push(res[i].title);
+        }
+
+    })
+    return roleArray;
+}
+// Manager selection
+var managerArray = [];
+function selectManager() {
+    connection.query("SELECT first_name, last_name FROM employee WHERE manager_id IS NULL",
+    function(err, res){
+        if (err) throw err
+        for (var i = 0; i < res.length; i++){
+        managerArray.push(res[i].first_name);
+        }
+    })
+    return managerArray;
+}
+
+
+// View Depts
+function viewDepartments() {
+connection.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER by employee.id;",
+function(err, res){
+    if (err) throw error
+    console.table(res)
+    initialPrompt()
+})
+}
+
+// View Roles
+function viewRoles() {
+    connection.query("SELECT employee.first_name, employee.last_name, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;", 
+    function(err, res) {
+    if (err) throw err
+    console.table(res)
+    initialPrompt()
+    })
+  }
+
+  // View Employees
+function viewEmployees(){
+    connection.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;",
+    function(err,res){
+        if (err) throw err
+        console.table(res)
+        initialPrompt()
+    })
+}
+
+  // Update Role
+  function updateRole() {
+      connection.query("SELECT employee.last_name, role.title FROM employee JOIN role ON employee.role_id = role.id;",
+      function(err, res){
+          if (err) throw err
+          inquirer.prompt([
+              {
+                  
+              }
+          ])
+      })
+  }
