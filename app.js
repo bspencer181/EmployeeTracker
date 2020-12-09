@@ -10,28 +10,27 @@ var connection = mysql.createConnection({
   port     : 3306,
   user     : 'root',
   password : 'password',
-  database : 'employee_tracker'
+  database : 'employee_trackerDB'
 });
  
 //Connection
-connection.connect();
- 
-connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-  if (error) throw error;
-  console.log('The solution is: ', results[0].solution);
+connection.connect(function (err){
+    if (err) throw err;
+    initialPrompt();
 });
  
-connection.end(); 
+
 
 //Initial prompt
 function initialPrompt(){
-inquirer.prompt({
+inquirer.prompt([
+    {
     name: "start",
     message: "What would you like to do?",
     type: "list",
-    choices: ["Add Deparments","Add Roles","Add Employees","View Departments",'View Roles', 'View Emploees', 'Update Employee Roles']
-}).then(function(response){
-    switch (response) {
+    choices: ["Add Deparments","Add Roles","Add Employees","View Departments",'View Roles', 'View Employees', 'Update Employee Roles']
+}]).then((answer) => {
+    switch (answer.start) {
         case "Add Departments":
                 addDept();
             break;  
@@ -55,7 +54,7 @@ inquirer.prompt({
             break;
     }
 })
-}
+};
 
 // Add Dept
 function addDept (){
@@ -79,7 +78,7 @@ function addDept (){
             }
         )
     })
-}
+};
 
 // Add Role
 function addRoles(){
@@ -113,7 +112,7 @@ function addRoles(){
         });
 
     });
-}
+};
 
 // Add employee
 function addEmployee(){
@@ -161,7 +160,7 @@ function addEmployee(){
         }
         )
     })
-}
+};
 //Role selection
 var roleArray = [];
 function selectRole(){
@@ -173,7 +172,7 @@ function selectRole(){
 
     })
     return roleArray;
-}
+};
 // Manager selection
 var managerArray = [];
 function selectManager() {
@@ -185,7 +184,7 @@ function selectManager() {
         }
     })
     return managerArray;
-}
+};
 
 
 // View Depts
@@ -196,7 +195,7 @@ function(err, res){
     console.table(res)
     initialPrompt()
 })
-}
+};
 
 // View Roles
 function viewRoles() {
@@ -206,7 +205,7 @@ function viewRoles() {
     console.table(res)
     initialPrompt()
     })
-  }
+  };
 
   // View Employees
 function viewEmployees(){
@@ -216,7 +215,7 @@ function viewEmployees(){
         console.table(res)
         initialPrompt()
     })
-}
+};
 
   // Update Role
   function updateRole() {
