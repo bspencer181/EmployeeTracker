@@ -225,8 +225,42 @@ function viewEmployees(){
           if (err) throw err
           inquirer.prompt([
               {
-                  
+                name: "lastName",
+                type: "rawlist",
+                choices: function() {
+                  var lastName = [];
+                  for (var i = 0; i < res.length; i++) {
+                    lastName.push(res[i].last_name);
               }
+              return lastName;
+            },
+            message: "What is the employee's last name?",
+        },
+        {
+            name: "role",
+            type: "list",
+            message: "What is the employee's role?",
+            choices: selectRole()
+        },
+
           ])
-      })
+          .then(function(val){
+              var roleID = select.Role().indexOf(val.role) + 1
+              connection.query("UPDATE employee SET WHERE ?",
+              
+              {
+                  last_name: val.lastName
+              },
+              
+              {
+                  role_id: roleID
+              },
+              function(err){
+                  if (err) throw err
+                  console.table(val)
+                  initialPrompt
+              }
+              )
+          });
+      });
   }
